@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สู้ๆ นะเพื่อน! 💪</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f5f5f5;
+            transition: all 2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Beautiful state */
+        body.beautiful {
+            background: linear-gradient(-45deg, #4ECDC4, #44A08D, #096B72, #1B4F72);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .container {
+            text-align: center;
+            z-index: 10;
+            position: relative;
+            transition: all 1s ease;
+        }
+        
+        /* Simple state styling */
+        .simple-text {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 2rem;
+            font-weight: 400;
+        }
+        
+        .simple-button {
+            background: #666;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .simple-button:hover {
+            background: #555;
+        }
+        
+        /* Beautiful state styling */
+        .main-text {
+            font-size: clamp(3rem, 8vw, 8rem);
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+            margin-bottom: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0;
+        }
+        
+        .main-text.show {
+            opacity: 1;
+            animation: heartbeat 2s ease-in-out infinite;
+        }
+        
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .letter {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(50px) scale(0.5) rotate(180deg);
+            transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        
+        .letter.animate {
+            opacity: 1;
+            transform: translateY(0) scale(1) rotate(0deg);
+        }
+        
+        .letter:nth-child(odd) {
+            color: #fff;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.8);
+        }
+        
+        .letter:nth-child(even) {
+            color: #FFD93D;
+            text-shadow: 0 0 30px rgba(255, 217, 61, 0.8);
+        }
+        
+        .subtitle {
+            font-size: clamp(1rem, 3vw, 2rem);
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 300;
+            margin-bottom: 3rem;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s ease;
+        }
+        
+        .subtitle.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .glass-effect {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 3rem 2rem;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        .glass-effect.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        .floating-hearts {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            opacity: 0;
+            transition: opacity 2s ease;
+        }
+        
+        .floating-hearts.show {
+            opacity: 1;
+        }
+        
+        .heart {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 2rem;
+            animation: float 6s linear infinite;
+        }
+        
+        .emoji {
+            position: absolute;
+            font-size: 2rem;
+            animation: float 6s linear infinite;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: white;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: sparkle 2s ease-out forwards;
+        }
+        
+        @keyframes sparkle {
+            0% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0) translate(var(--random-x), var(--random-y));
+            }
+        }
+        
+        .message-box {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            z-index: 100;
+            text-align: center;
+            color: #333;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        
+        .message-box.show {
+            transform: translate(-50%, -50%) scale(1);
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        /* Hide elements initially */
+        .main-text,
+        .glass-effect,
+        .floating-hearts {
+            display: none;
+        }
+        
+        .main-text.reveal,
+        .glass-effect.reveal,
+        .floating-hearts.reveal {
+            display: block;
+        }
+        
+        @media (max-width: 768px) {
+            .glass-effect {
+                padding: 2rem 1rem;
+                margin: 1rem;
+            }
+            
+            .simple-text {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-hearts"></div>
+    
+    <div class="container">
+        <!-- Simple state -->
+        <div id="simpleState">
+            <h1 class="simple-text">มึงต้องการกำลังใจมั้ย? 🤔</h1>
+            <button class="simple-button" onclick="transform()">
+                กดซิ!
+            </button>
+        </div>
+        
+        <!-- Beautiful state (hidden initially) -->
+        <div class="glass-effect">
+            <h1 class="main-text" id="mainText"></h1>
+            <!-- <p class="subtitle">กูเชื่อในตัวมึง! 🌟💪</p> -->
+        </div>
+    </div>
+    
+    <div class="message-box" id="messageBox">
+        <button class="close-btn" onclick="hideMessage()">×</button>
+        <h2 style="color: #4ECDC4; margin-bottom: 1rem;">! เพื่อนรัก 🥺</h2>
+        <p style="line-height: 1.6; margin-bottom: 1rem;">
+            <strong>สู้ๆ นะมึง!</strong> มึงเก่งมากแล้ว อย่าท้อใจเลย! 
+            ทุกปัญหามันมีทางออก มึงทำดีแล้ว! 
+        </p>
+        <p style="line-height: 1.6; margin-bottom: 1rem;">
+            <strong>จำไว้นะ:</strong> มึงมีความสามารถ 
+            และมึงสามารถผ่านอุปสรรคนี้ไปได้! 🔥💪
+        </p>
+        <p style="line-height: 1.6; color: #FF6B6B; font-weight: bold;">
+            กูเชื่อในตัวมึง! ไฟต์ติ้ง! 🚀✨
+        </p>
+    </div>
+
+    <script>
+        let transformed = false;
+        
+        function transform() {
+            if (transformed) return;
+            transformed = true;
+            
+            const simpleState = document.getElementById('simpleState');
+            const body = document.body;
+            const glassEffect = document.querySelector('.glass-effect');
+            const floatingHearts = document.querySelector('.floating-hearts');
+            const mainText = document.getElementById('mainText');
+            const subtitle = document.querySelector('.subtitle');
+            
+            // Hide simple state
+            simpleState.style.opacity = '0';
+            simpleState.style.transform = 'scale(0.8)';
+            
+            setTimeout(() => {
+                simpleState.style.display = 'none';
+                
+                // Show beautiful elements
+                glassEffect.classList.add('reveal');
+                floatingHearts.classList.add('reveal');
+                mainText.classList.add('reveal');
+                
+                // Transform body
+                body.classList.add('beautiful');
+                
+                // Show glass effect
+                setTimeout(() => {
+                    glassEffect.classList.add('show');
+                }, 100);
+                
+                // Start letter animation
+                setTimeout(() => {
+                    revealMessage();
+                }, 800);
+                
+                // Start hearts
+                setTimeout(() => {
+                    floatingHearts.classList.add('show');
+                    startHearts();
+                }, 1500);
+                
+            }, 500);
+        }
+        
+        function revealMessage() {
+            const mainText = document.getElementById('mainText');
+            const subtitle = document.querySelector('.subtitle');
+            
+            // Prepare the text
+            const messages = [
+                "สู้ๆ มึงเก่งที่สุดแล้ว!",
+            ];
+            const message = messages[Math.floor(Math.random() * messages.length)];
+            mainText.innerHTML = '';
+            
+            // Create span for each letter
+            for (let i = 0; i < message.length; i++) {
+                const span = document.createElement('span');
+                span.className = 'letter';
+                span.textContent = message[i] === ' ' ? '\u00A0' : message[i];
+                mainText.appendChild(span);
+            }
+            
+            // Show main text container
+            mainText.classList.add('show');
+            
+            // Animate each letter with delay
+            const letters = document.querySelectorAll('.letter');
+            letters.forEach((letter, index) => {
+                setTimeout(() => {
+                    letter.classList.add('animate');
+                    
+                    // Create sparkle effect for each letter
+                    if (message[index] !== ' ') {
+                        createLetterSparkle(letter);
+                    }
+                    
+                    // Show subtitle after a few letters
+                    if (index === 5) {
+                        subtitle.classList.add('show');
+                    }
+                    
+                    // Show message box after last letter
+                    if (index === letters.length - 1) {
+                        setTimeout(() => {
+                            showMessage();
+                            createCelebration();
+                        }, 1000);
+                    }
+                }, index * 300);
+            });
+        }
+        
+        function createLetterSparkle(letterElement) {
+            const rect = letterElement.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            
+            for (let i = 0; i < 12; i++) {
+                setTimeout(() => {
+                    createParticle(centerX, centerY);
+                }, i * 80);
+            }
+        }
+        
+        function createParticle(x, y) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = x + 'px';
+            particle.style.top = y + 'px';
+            particle.style.setProperty('--random-x', (Math.random() - 0.5) * 300 + 'px');
+            particle.style.setProperty('--random-y', (Math.random() - 0.5) * 300 + 'px');
+            document.body.appendChild(particle);
+            
+            setTimeout(() => {
+                particle.remove();
+            }, 2000);
+        }
+        
+        function createCelebration() {
+            for (let i = 0; i < 100; i++) {
+                setTimeout(() => {
+                    createParticle(
+                        Math.random() * window.innerWidth,
+                        Math.random() * window.innerHeight
+                    );
+                }, i * 30);
+            }
+        }
+        
+        function showMessage() {
+            document.getElementById('messageBox').classList.add('show');
+        }
+        
+        function hideMessage() {
+            document.getElementById('messageBox').classList.remove('show');
+        }
+        
+        function startHearts() {
+            function createHeart() {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.innerHTML = '❤️';
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.animationDelay = Math.random() * 2 + 's';
+                heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
+                document.querySelector('.floating-hearts').appendChild(heart);
+                
+                setTimeout(() => {
+                    heart.remove();
+                }, 7000);
+            }
+            
+            // Generate hearts continuously
+            setInterval(createHeart, 800);
+            
+            // Initial hearts
+            for (let i = 0; i < 5; i++) {
+                setTimeout(createHeart, i * 1000);
+            }
+        }
+        
+        // Click effect on main text
+        document.getElementById('mainText').addEventListener('click', function(e) {
+            if (this.classList.contains('show')) {
+                for (let i = 0; i < 20; i++) {
+                    createParticle(e.clientX, e.clientY);
+                }
+            }
+        });
+        
+        // Close message when clicking outside
+        document.getElementById('messageBox').addEventListener('click', function(e) {
+            if (e.target === this) {
+                hideMessage();
+            }
+        });
+        
+        // Keyboard support
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                hideMessage();
+            }
+        });
+    </script>
+</body>
+</html>
